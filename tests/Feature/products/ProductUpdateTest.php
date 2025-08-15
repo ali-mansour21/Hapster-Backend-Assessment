@@ -38,4 +38,23 @@ class ProductUpdateTest extends TestCase
             'stock' => 60,
         ]);
     }
+    public function it_validates_update_fields(): void
+    {
+        $p = Product::create([
+            'name'  => 'Keyboard',
+            'sku'   => 'SKU-KBD-001',
+            'price' => 79.00,
+            'stock' => 10,
+        ]);
+
+        $res = $this->putJson("/api/products/{$p->id}", [
+            'stock' => -1,
+        ]);
+
+        $res->assertUnprocessable()
+            ->assertJson([
+                'status'  => 'failed',
+                'message' => 'Validation failed.',
+            ]);
+    }
 }
