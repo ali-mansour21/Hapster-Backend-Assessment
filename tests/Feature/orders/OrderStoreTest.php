@@ -48,4 +48,19 @@ class OrderStoreTest extends TestCase
             return (int)$job->orderId === (int)$orderId;
         });
     }
+    public function it_validates_items_array_and_each_row(): void
+    {
+        $res = $this->postJson('/api/orders', [
+            'items' => [
+                ['product_id' => 9999, 'qty' => 0],
+            ],
+        ]);
+
+        $res->assertUnprocessable()
+            ->assertJson([
+                'status'  => 'failed',
+                'message' => 'Validation failed.',
+            ])
+            ->assertJsonStructure(['errors' => ['items.0.product_id', 'items.0.qty']]);
+    }
 }
