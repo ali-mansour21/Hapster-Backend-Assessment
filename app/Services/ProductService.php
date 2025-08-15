@@ -32,4 +32,17 @@ class ProductService
         $key = "products.show:{$product->id}";
         return Cache::tags(['products', "product:{$product->id}"])->remember($key, self::SHOW_TTL, fn() => $product);
     }
+    public function create(array $data)
+    {
+        $product = Product::create($data);
+        $this->bustListAndOne($product->id);
+        return $product;
+    }
+
+
+    private function bustListAndOne(int $productId): void
+    {
+        Cache::tags(['products', 'products:index'])->flush();
+        Cache::tags(["product:{$productId}"])->flush();
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\products;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Http\Requests\product\ProductStoreRequest;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -26,9 +27,13 @@ class ProductController extends BaseApiController
         $payload = $this->productService->show($product);
         return $this->ok($payload);
     }
-    public function store()
+    public function store(ProductStoreRequest $productStoreRequest)
     {
-        //
+        $data = $productStoreRequest->validated();
+
+        $product = $this->productService->create($data);
+
+        return $this->created($product, 'Product created.');
     }
     public function update()
     {
