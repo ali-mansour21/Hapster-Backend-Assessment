@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\products;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
@@ -20,9 +21,10 @@ class ProductController extends BaseApiController
         $payload = $this->productService->paginate($page, $limit);
         return $this->ok($payload['data'], null, $payload['meta']);
     }
-    public function show()
+    public function show(Product $product)
     {
-        //
+        $payload = $this->productService->show($product);
+        return $this->ok($payload);
     }
     public function store()
     {

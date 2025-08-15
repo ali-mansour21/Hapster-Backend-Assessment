@@ -27,4 +27,9 @@ class ProductService
             return compact('data', 'meta');
         });
     }
+    public function show(Product $product)
+    {
+        $key = "products.show:{$product->id}";
+        return Cache::tags(['products', "product:{$product->id}"])->remember($key, self::SHOW_TTL, fn() => $product);
+    }
 }
