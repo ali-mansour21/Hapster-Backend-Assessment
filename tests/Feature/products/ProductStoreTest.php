@@ -40,4 +40,27 @@ class ProductStoreTest extends TestCase
             'stock' => 70,
         ]);
     }
+    public function it_validates_unique_sku_and_required_fields(): void
+    {
+        $this->postJson('/api/products', [
+            'name'  => 'A',
+            'sku'   => 'DUP-001',
+            'price' => 10,
+            'stock' => 1,
+        ])->assertCreated();
+
+        $res = $this->postJson('/api/products', [
+            'name'  => '',
+            'sku'   => 'DUP-001',
+            'price' => -1,
+            'stock' => -5,
+        ]);
+
+        $res->assertUnprocessable()
+            ->assertJson([
+                'status'  => 'failed',
+                'message' => 'Validation failed.',
+            ])
+            ->assertJsonStructure(['errors' => ['name', 'sku', 'price', 'stock']]);
+    }
 }
