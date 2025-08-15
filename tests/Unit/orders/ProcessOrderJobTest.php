@@ -7,11 +7,13 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProcessOrderJobTest extends TestCase
 {
     use RefreshDatabase;
+    #[Test]
     public function it_decrements_stock_sets_item_prices_and_completes_order_with_correct_total(): void
     {
         $p1 = Product::create(['name' => 'A', 'sku' => 'A-1', 'price' => 24.90, 'stock' => 100]);
@@ -36,6 +38,7 @@ class ProcessOrderJobTest extends TestCase
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $p1->id, 'price' => 24.90]);
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $p2->id, 'price' => 79.00]);
     }
+    #[Test]
     public function it_marks_failed_if_stock_is_insufficient(): void
     {
         $p = Product::create(['name' => 'A', 'sku' => 'A-1', 'price' => 10.00, 'stock' => 1]);

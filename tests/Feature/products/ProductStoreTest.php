@@ -4,6 +4,7 @@ namespace Tests\Feature\products;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductStoreTest extends TestCase
@@ -12,6 +13,7 @@ class ProductStoreTest extends TestCase
     /**
      * A basic feature test example.
      */
+    #[Test]
     public function it_creates_a_product_and_returns_unified_success_response(): void
     {
         $payload = [
@@ -40,6 +42,7 @@ class ProductStoreTest extends TestCase
             'stock' => 70,
         ]);
     }
+    #[Test]
     public function it_validates_unique_sku_and_required_fields(): void
     {
         $this->postJson('/api/products', [

@@ -5,11 +5,13 @@ namespace Tests\Feature\products;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProductUpdateTest extends TestCase
 {
     use RefreshDatabase;
+    #[Test]
     public function it_updates_a_product_and_clears_caches_via_service(): void
     {
         $p = Product::create([
@@ -38,6 +40,7 @@ class ProductUpdateTest extends TestCase
             'stock' => 60,
         ]);
     }
+    #[Test]
     public function it_validates_update_fields(): void
     {
         $p = Product::create([

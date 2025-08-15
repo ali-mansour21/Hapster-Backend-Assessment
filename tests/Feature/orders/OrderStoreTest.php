@@ -7,11 +7,13 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class OrderStoreTest extends TestCase
 {
     use RefreshDatabase;
+    #[Test]
     public function it_creates_a_pending_order_and_dispatches_processing_job(): void
     {
         Queue::fake();
@@ -48,6 +50,7 @@ class OrderStoreTest extends TestCase
             return (int)$job->orderId === (int)$orderId;
         });
     }
+    #[Test]
     public function it_validates_items_array_and_each_row(): void
     {
         $res = $this->postJson('/api/orders', [
