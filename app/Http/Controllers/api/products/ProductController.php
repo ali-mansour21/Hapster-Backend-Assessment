@@ -21,7 +21,7 @@ class ProductController extends BaseApiController
         $page = $request->input('page');
         $limit = $request->input('limit');
         $payload = $this->productService->paginate($page, $limit);
-        return $this->ok($payload['data'], null, $payload['meta']);
+        return $this->ok($payload['paginator'], null, $payload['meta']);
     }
     public function show(Product $product)
     {
@@ -48,6 +48,6 @@ class ProductController extends BaseApiController
     {
         $this->productService->delete($product);
 
-        return $this->ok(null,'Product deleted');
+        return $this->ok(null, 'Product deleted');
     }
 }

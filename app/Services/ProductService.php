@@ -24,7 +24,7 @@ class ProductService
                     'last_page'    => $paginator->lastPage(),
                 ],
             ];
-            return compact('data', 'meta');
+            return compact('paginator', 'meta');
         });
     }
     public function show(Product $product): Product
