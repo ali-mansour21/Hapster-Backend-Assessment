@@ -12,6 +12,7 @@ use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProcessOrderJob implements ShouldQueue
 {
@@ -75,6 +76,10 @@ class ProcessOrderJob implements ShouldQueue
 
             Cache::tags(['orders', 'orders:index'])->flush();
             Cache::tags(["order:{$order->id}"])->flush();
+
+            Log::error("Error while proccessing the order", [
+                'error' => $th->getMessage()
+            ]);
             throw $th;
         }
     }
