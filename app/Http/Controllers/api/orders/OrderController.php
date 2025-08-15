@@ -44,7 +44,7 @@ class OrderController extends BaseApiController
         ]);
         $from = $validated['from'] ?? null;
         $to = $validated['to'] ?? null;
-        $stats = $this->orderService->getStats($from,$to);
+        $stats = $this->orderService->stats($from,$to);
 
         return $this->ok($stats);
     }
