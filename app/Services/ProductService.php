@@ -38,6 +38,12 @@ class ProductService
         $this->bustListAndOne($product->id);
         return $product;
     }
+    public function update(Product $product, array $data)
+    {
+        $product->update($data);
+        $this->bustListAndOne($product->id);
+        return $product;
+    }
 
 
     private function bustListAndOne(int $productId): void
