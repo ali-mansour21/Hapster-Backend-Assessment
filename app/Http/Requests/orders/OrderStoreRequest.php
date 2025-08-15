@@ -9,6 +9,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class OrderStoreRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = false;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,9 +26,9 @@ class OrderStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|integer|exists:products,id',
-            'items.*.qty' => 'required|integer'
+            'items'              => ['required', 'array', 'min:1'],
+            'items.*.product_id' => ['required', 'integer', 'exists:products,id'],
+            'items.*.qty'        => ['required', 'integer', 'min:1'],
         ];
     }
     public function failedValidation(Validator $validator)
