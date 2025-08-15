@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests\Feature\orders;
+namespace Tests\Unit\orders;
 
 use App\Jobs\orders\ProcessOrderJob;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ProcessOrderJobTest extends TestCase
