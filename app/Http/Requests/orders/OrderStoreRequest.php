@@ -26,8 +26,8 @@ class OrderStoreRequest extends FormRequest
     {
         return [
             'items' => 'required|array',
-            'items.product_id' => 'required|integer|exists:prodcuts,id',
-            'items.qty' => 'required|integer'
+            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items.*.qty' => 'required|integer'
         ];
     }
     public function failedValidation(Validator $validator)

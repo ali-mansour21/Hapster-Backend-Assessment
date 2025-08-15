@@ -30,7 +30,7 @@ class OrderService
             return compact('paginator', 'meta');
         });
     }
-    public function show(Order $order): Order
+    public function show(Order $order)
     {
         $order = $order->load('items');
         $key = "orders.show:{$order->id}";
@@ -40,7 +40,6 @@ class OrderService
     {
         $order = DB::transaction(function () use ($data) {
             $order = Order::create([
-                'user_id'     => auth('api')->id() ?? null,
                 'status'      => 'pending',
                 'total_price' => 0,
             ]);
