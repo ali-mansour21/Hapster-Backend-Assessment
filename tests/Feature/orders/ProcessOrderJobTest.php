@@ -37,4 +37,20 @@ class ProcessOrderJobTest extends TestCase
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $p1->id, 'price' => 24.90]);
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $p2->id, 'price' => 79.00]);
     }
+    public function it_marks_failed_if_stock_is_insufficient(): void
+    {
+        $p = Product::create(['name' => 'A', 'sku' => 'A-1', 'price' => 10.00, 'stock' => 1]);
+
+        $order = Order::create(['status' => 'pending', 'total_price' => 0]);
+        OrderItem::create(['order_id' => $order->id, 'product_id' => $p->id, 'qty' => 5, 'price' => 0]);
+
+        try {
+            (new ProcessOrderJob($order->id))->handle();
+        } catch (\Throwable $e) {
+        }
+
+        $order->refresh();
+        $this->assertSame('failed', $order->status);
+        $this->assertDatabaseHas('products', ['id' => $p->id, 'stock' => 1]);
+    }
 }
