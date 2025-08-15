@@ -46,6 +46,7 @@ class ProcessOrderJob implements ShouldQueue
         $order->update(['status' => 'processing']);
 
         try {
+            $productIds = [];
             DB::transaction(function () use ($order) {
                 $total = 0;
 
@@ -60,25 +61,41 @@ class ProcessOrderJob implements ShouldQueue
                     $item->price = $product->price;
                     $item->save();
 
-                    $total = (float) $item->qty * $product->price;
+                    $line = bcmul((string)$product->price, (string)$item->qty, 2);
+                    $total = bcadd($total, $line, 2);
+
+                    $productIds[] = $product->id;
                 }
                 $order->total_price = $total;
                 $order->status = 'completed';
                 $order->save();
 
-                Cache::tags(['orders', 'orders:index'])->flush();
-                Cache::tags(["order:{$order->id}"])->flush();
+                $this->flushProductCaches($productIds);
+                $this->flushOrderCaches($order->id);
             });
         } catch (\Throwable $th) {
             $order->update(['status' => 'failed']);
 
-            Cache::tags(['orders', 'orders:index'])->flush();
-            Cache::tags(["order:{$order->id}"])->flush();
+            $this->flushOrderCaches($order->id);
 
             Log::error("Error while proccessing the order", [
                 'error' => $th->getMessage()
             ]);
             throw $th;
+        }
+    }
+
+    private function flushOrderCaches(int $orderId): void
+    {
+        Cache::tags(['orders', 'orders:index'])->flush();
+        Cache::tags(["order:{$orderId}"])->flush();
+    }
+
+    private function flushProductCaches(array $productIds): void
+    {
+        Cache::tags(['products', 'products:index'])->flush();
+        foreach (array_unique($productIds) as $pid) {
+            Cache::tags(["product:{$pid}"])->flush();
         }
     }
 }
