@@ -19,7 +19,7 @@ class ProcessOrderJob implements ShouldQueue
     use Queueable, Dispatchable, SerializesModels, InteractsWithQueue;
 
     public int $tries   = 3;
-    public int $backoff = 5; // seconds
+    public int $backoff = 5;
     /**
      * Create a new job instance.
      */
