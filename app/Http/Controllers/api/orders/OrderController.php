@@ -36,4 +36,16 @@ class OrderController extends BaseApiController
 
         return $this->created($order, 'Order Created');
     }
+    public function getOrderStats(Request $request)
+    {
+        $validated = $request->validate([
+            'from' => ['nullable', 'date'],
+            'to'   => ['nullable', 'date', 'after_or_equal:from'],
+        ]);
+        $from = $validated['from'] ?? null;
+        $to = $validated['to'] ?? null;
+        $stats = $this->orderService->getStats($from,$to);
+
+        return $this->ok($stats);
+    }
 }

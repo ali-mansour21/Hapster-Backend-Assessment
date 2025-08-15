@@ -61,4 +61,27 @@ class OrderService
         $order = $order->load('items');
         return $order;
     }
+    public function stats(?string $from, ?string $to): array
+    {
+        $key = sprintf(
+            'orders.stats:%s:%s',
+            $from ?? 'null',
+            $to   ?? 'null'
+        );
+
+        return Cache::tags(['orders', 'orders:stats'])->remember($key, self::INDEX_TTL, function () use ($from, $to) {
+            $q = Order::query()->where('status', 'completed');
+
+            if ($from) $q->whereDate('created_at', '>=', $from);
+            if ($to)   $q->whereDate('created_at', '<=', $to);
+
+            $row = $q->selectRaw('COUNT(*) as cnt, COALESCE(SUM(total_price), 0) as revenue')->first();
+
+            return [
+                'count'   => (int) $row->cnt,
+                'revenue' => number_format((float) $row->revenue, 2, '.', ''),
+                'range'   => ['from' => $from, 'to' => $to],
+            ];
+        });
+    }
 }

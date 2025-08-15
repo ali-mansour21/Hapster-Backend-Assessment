@@ -87,7 +87,7 @@ class ProcessOrderJob implements ShouldQueue
 
     private function flushOrderCaches(int $orderId): void
     {
-        Cache::tags(['orders', 'orders:index'])->flush();
+        Cache::tags(['orders', 'orders:index', 'orders:stats'])->flush();
         Cache::tags(["order:{$orderId}"])->flush();
     }
 
