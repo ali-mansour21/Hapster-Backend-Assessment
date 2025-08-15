@@ -42,7 +42,7 @@ class ProductController extends BaseApiController
 
         $resultData = $this->productService->update($product, $requestData);
 
-        return $this->ok($resultData, 'Product Updated');
+        return $this->ok($resultData, 'Product updated.');
     }
     public function destroy(Product $product)
     {
