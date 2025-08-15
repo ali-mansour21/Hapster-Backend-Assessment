@@ -38,7 +38,7 @@ class ProcessOrderJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $order = Order::with('items')->query()->findOrFail($this->orderId);
+        $order = Order::query()->with('items')->findOrFail($this->orderId);
 
         if (in_array($order->status, ['completed', 'failed'], true)) {
             return;
