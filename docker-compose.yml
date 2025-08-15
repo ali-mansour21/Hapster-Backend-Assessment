@@ -48,6 +48,42 @@ services:
             retries: 20
         networks:
             - hapster
+    worker:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        container_name: hapster_worker
+        working_dir: /var/www
+        volumes:
+        - ./:/var/www
+        depends_on:
+        - db
+        - redis
+        networks: [hapster]
+        restart: unless-stopped
+        command: >
+            bash -lc "php artisan queue:work
+                --sleep=1
+                --tries=3
+                --backoff=5
+                --max-time=3600
+                --memory=256"
+
+    horizon:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        container_name: hapster_horizon
+        working_dir: /var/www
+        volumes:
+        - ./:/var/www
+        depends_on:
+        - db
+        - redis
+        networks: [hapster]
+        restart: unless-stopped
+        command: >
+            bash -lc "php artisan horizon"
 networks:
     hapster:
 volumes:
