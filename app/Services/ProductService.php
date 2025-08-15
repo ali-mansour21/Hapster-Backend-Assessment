@@ -9,7 +9,7 @@ class ProductService
 {
     private const INDEX_TTL = 300;   // 5 min
     private const SHOW_TTL  = 1800;  // 30 min
-    public function paginate(int $page, int $limit)
+    public function paginate(int $page, int $limit): array
     {
         $key = "products.index:p{$page}:l{$limit}";
         return Cache::tags(['products', 'products:index'])->remember($key, self::INDEX_TTL, function () use ($page, $limit) {
@@ -27,22 +27,28 @@ class ProductService
             return compact('data', 'meta');
         });
     }
-    public function show(Product $product)
+    public function show(Product $product): Product
     {
         $key = "products.show:{$product->id}";
         return Cache::tags(['products', "product:{$product->id}"])->remember($key, self::SHOW_TTL, fn() => $product);
     }
-    public function create(array $data)
+    public function create(array $data): Product
     {
         $product = Product::create($data);
         $this->bustListAndOne($product->id);
         return $product;
     }
-    public function update(Product $product, array $data)
+    public function update(Product $product, array $data): Product
     {
         $product->update($data);
         $this->bustListAndOne($product->id);
         return $product;
+    }
+    public function delete(Product $product): void
+    {
+        $id = $product->id;
+        $product->delete();
+        $this->bustListAndOne($id);
     }
 
 

@@ -44,8 +44,10 @@ class ProductController extends BaseApiController
 
         return $this->ok($resultData, 'Product Updated');
     }
-    public function destroy()
+    public function destroy(Product $product)
     {
-        //
+        $this->productService->delete($product);
+
+        return $this->ok(null,'Product deleted');
     }
 }
