@@ -44,7 +44,7 @@ cp .env.example .env
 Update the `.env` file with the following configuration:
 
 ```env
-APP_NAME=Laravel
+APP_NAME=HapsterAPI
 APP_ENV=local
 APP_KEY=base64:GENERATE_ME
 APP_DEBUG=true
@@ -149,7 +149,21 @@ docker compose exec app php artisan test
 
 ## 📡 API Testing
 
-### Create a Product
+### Products
+
+#### Get all Products
+
+```http
+GET /api/products
+```
+
+#### Get a specific Product
+
+```http
+GET /api/products/{id}
+```
+
+#### Create a Product
 
 ```http
 POST /api/products
@@ -163,7 +177,7 @@ Content-Type: application/json
 }
 ```
 
-### Update a Product
+#### Update a Product
 
 ```http
 PUT /api/products/{id}
@@ -175,7 +189,27 @@ Content-Type: application/json
 }
 ```
 
-### Create an Order
+#### Delete a Product
+
+```http
+DELETE /api/products/{id}
+```
+
+### Orders
+
+#### Get all Orders
+
+```http
+GET /api/orders
+```
+
+#### Get a specific Order
+
+```http
+GET /api/orders/{id}
+```
+
+#### Create an Order
 
 ```http
 POST /api/orders
