@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\orders;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Http\Requests\orders\OrderStoreRequest;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -26,5 +27,13 @@ class OrderController extends BaseApiController
     {
         $payload = $this->orderService->show($order);
         return $this->ok($payload);
+    }
+    public function store(OrderStoreRequest $orderStoreRequest)
+    {
+        $requestData = $orderStoreRequest->validated();
+
+        $order = $this->orderService->create($requestData);
+
+        return $this->created($order, 'Order Created');
     }
 }
