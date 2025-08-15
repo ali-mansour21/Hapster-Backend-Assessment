@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\orders;
 
 use App\Http\Controllers\api\BaseApiController;
+use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 
@@ -20,5 +21,10 @@ class OrderController extends BaseApiController
         $payload = $this->orderService->paginate($page, $limit);
 
         return $this->ok($payload['paginator'], null, $payload['meta']);
+    }
+    public function show(Order $order)
+    {
+        $payload = $this->orderService->show($order);
+        return $this->ok($payload);
     }
 }

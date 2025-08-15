@@ -27,4 +27,10 @@ class OrderService
             return compact('paginator', 'meta');
         });
     }
+    public function show(Order $order): Order
+    {
+        $order = $order->load('items');
+        $key = "orders.show:{$order->id}";
+        return Cache::tags(['orders', "order:{$order->id}"])->remember($key, self::SHOW_TTL, fn() => $order);
+    }
 }
