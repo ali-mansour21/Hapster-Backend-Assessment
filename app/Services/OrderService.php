@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\orders\ProcessOrderJob;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Cache;
@@ -57,7 +58,7 @@ class OrderService
         Cache::tags(['orders', 'orders:index'])->flush();
         Cache::tags(["order:{$order->id}"])->flush();
 
-        
+        ProcessOrderJob::dispatch($order->id);
         $order = $order->load('items');
         return $order;
     }
